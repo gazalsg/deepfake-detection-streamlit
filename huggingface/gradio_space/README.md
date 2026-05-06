@@ -20,19 +20,22 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 ## 🔗 Quick Access
 
 ### 📓 Master's Thesis Project
+
 [![GitHub Project](https://img.shields.io/badge/GitHub-Master's%20Project-black?style=for-the-badge&logo=github)](https://github.com/CemRoot/Master-Uni-Project)
 
-**Notebook kodları, Flask app ve demo görselleri için yukarıdaki butona tıklayınız** | *Click above for notebooks, Flask app, and demo images*
+**Notebook kodları, Flask app ve demo görselleri için yukarıdaki butona tıklayınız** | _Click above for notebooks, Flask app, and demo images_
 
 ### 🤗 Pre-trained Models
+
 [![Download Models](https://img.shields.io/badge/🤗%20Models-Download-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co/CemRoot/deepfake-detection-model)
 
-**Eğitilmiş modellere ulaşmak için yukarıdaki butona tıklayınız** | *Click above to access pre-trained models*
+**Eğitilmiş modellere ulaşmak için yukarıdaki butona tıklayınız** | _Click above to access pre-trained models_
 
 ### 🔗 Streamlit Application (This Repository)
+
 [![GitHub](https://img.shields.io/badge/GitHub-Streamlit%20App-FF4B4B?style=for-the-badge&logo=github)](https://github.com/CemRoot/deepfake-detection-streamlit)
 
-**Streamlit uygulama kodlarına ulaşmak için yukarıdaki butona tıklayınız** | *Click above to access Streamlit application source code*
+**Streamlit uygulama kodlarına ulaşmak için yukarıdaki butona tıklayınız** | _Click above to access Streamlit application source code_
 
 ---
 
@@ -72,6 +75,7 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 ## 📊 Detection Capabilities
 
 ### Generative Adversarial Networks (GANs)
+
 ✅ StyleGAN (v1, v2, v3)
 ✅ ProGAN
 ✅ BigGAN
@@ -80,6 +84,7 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 ✅ DCGAN, WGAN
 
 ### Diffusion Models
+
 ✅ Stable Diffusion
 ✅ DALL-E (2, 3)
 ✅ Midjourney
@@ -87,12 +92,14 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 ✅ DDPM, DDIM
 
 ### Other AI-Generated Content
+
 ✅ Neural style transfer
 ✅ VAE-based generators
 ✅ Autoregressive models
 ✅ Image-to-image translation
 
 ### Robustness
+
 ✅ Compressed images (JPEG artifacts)
 ✅ Resized/manipulated images
 ✅ Various image qualities
@@ -104,34 +111,40 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 This system includes **three preprocessing methods** for educational comparison:
 
 ### 1. ✅ Training Match (RECOMMENDED)
+
 - **Color Format:** BGR (matches OpenCV training pipeline)
 - **Value Range:** 0-255 (raw pixel values, no normalization)
 - **Expected Accuracy:** ~95%
 - **Use Case:** Production deployment, best performance
 
 **Why it works best:**
+
 - Exactly matches the preprocessing used during model training
 - Neural network weights optimized for this specific input distribution
 - No information loss from normalization
 
 ### 2. Simple [0,1] Normalization
+
 - **Color Format:** RGB
 - **Value Range:** 0-1 (normalized)
 - **Expected Accuracy:** ~58% (worse than random!)
 - **Use Case:** Educational demonstration of preprocessing impact
 
 **Why it performs poorly:**
+
 - Channel order mismatch (RGB vs BGR)
 - Value distribution completely different from training
 - Model weights never encountered these normalized values
 
 ### 3. EfficientNet ImageNet
+
 - **Color Format:** RGB
 - **Value Range:** ImageNet mean/std normalization (~-2 to +2)
 - **Expected Accuracy:** ~72%
 - **Use Case:** Transfer learning experiments
 
 **Why it's suboptimal:**
+
 - Uses ImageNet statistics (not deepfake-specific)
 - Different preprocessing than training pipeline
 - Better than simple normalization but still inconsistent
@@ -177,6 +190,7 @@ This system was developed for presentation at **AICS 2025** (33rd Irish Conferen
 The system provides **color-coded visual progress bars** for easy interpretation:
 
 ### Example Output (Fake Image Detected):
+
 ```
 Detection Results
 ┌────────────────────────────────────────────┐
@@ -186,6 +200,7 @@ Detection Results
 ```
 
 ### Example Output (Real Image Detected):
+
 ```
 Detection Results
 ┌────────────────────────────────────────────┐
@@ -195,6 +210,7 @@ Detection Results
 ```
 
 **Color Coding:**
+
 - 🔴 **Red Gradient** (`#ff4444` → `#cc0000`) - FAKE/AI-Generated
 - 🟢 **Green Gradient** (`#00cc00` → `#009900`) - AUTHENTIC/Real
 - **Bold white text** with shadow for maximum readability
@@ -264,14 +280,6 @@ else:
 
 ---
 
-## 👨‍💻 Author
-
-**Emin Cem Koyluoglu**
-
-33rd Irish Conference on Artificial Intelligence and Cognitive Science (AICS 2025)
-
----
-
 ## 📜 License
 
 MIT License - Free for academic and commercial use
@@ -281,17 +289,20 @@ MIT License - Free for academic and commercial use
 ## 🚀 Technical Implementation
 
 ### Model Loading
+
 - **Primary:** Local file (`best_model_effatt.h5`) - Fast startup
 - **Fallback:** Hugging Face Model Hub - Automatic download
 - **Architecture Rebuild:** Automatic fallback if full model loading fails
 
 ### Visual Interface
+
 - **Framework:** Gradio 5.0+ (latest, secure)
 - **Custom CSS:** Color-coded progress bars
 - **Theme:** Purple/Blue gradient (AICS 2025 branding)
 - **Responsive:** Works on desktop and mobile
 
 ### Performance Optimization
+
 - ⚡ **Fast Startup:** ~30 seconds (local model file)
 - 🚀 **Quick Inference:** 2-3 seconds per image
 - 💾 **Memory Efficient:** ~2GB RAM usage
@@ -312,16 +323,19 @@ MIT License - Free for academic and commercial use
 ## 📊 Version History
 
 **v1.2** (Current) - Visual Progress Bars
+
 - Added color-coded red/green progress bars
 - Improved visual feedback with gradients
 - Enhanced user experience
 
 **v1.1** - Model Loading Optimization
+
 - Local model file support
 - Architecture rebuild fallback
 - Faster startup time
 
 **v1.0** - Initial Release
+
 - EfficientNetB7 + Attention mechanism
 - Three preprocessing methods
 - Gradio interface

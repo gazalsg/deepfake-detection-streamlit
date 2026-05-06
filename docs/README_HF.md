@@ -52,14 +52,6 @@ Developed for **33rd Irish Conference on Artificial Intelligence and Cognitive S
 
 ---
 
-## 👨‍💻 Author
-
-**Emin Cem Koyluoglu** - AICS 2025
-
-33rd Irish Conference on Artificial Intelligence and Cognitive Science
-
----
-
 ## 📜 License
 
 MIT License

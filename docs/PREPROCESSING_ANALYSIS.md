@@ -42,6 +42,7 @@ img = img.astype(np.float32)        # Float32 conversion, NO normalization
 ```
 
 **Streamlit preprocessing pipeline:**
+
 ```python
 img_bgr = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)  # RGB → BGR conversion
 img_resized = cv2.resize(img_bgr, (128, 128))
@@ -50,6 +51,7 @@ arr = img_resized.astype(np.float32)  # NO normalization applied
 ```
 
 **Rationale for Optimal Performance:**
+
 - ✅ BGR color format (identical to training)
 - ✅ Pixel value range: 0-255 (matches training distribution)
 - ✅ NO normalization (consistent with training pipeline)
@@ -60,6 +62,7 @@ arr = img_resized.astype(np.float32)  # NO normalization applied
 ### 2️⃣ Simple [0,1] Normalization (INCORRECT - Poor Performance)
 
 **Implementation:**
+
 ```python
 img_resized = cv2.resize(img_array, (128, 128))  # RGB format
 arr = img_resized.astype(np.float32) / 255.0     # Normalization applied
@@ -69,6 +72,7 @@ arr = img_resized.astype(np.float32) / 255.0     # Normalization applied
 **Performance Degradation Analysis:**
 
 #### Issue 1: Channel Order Mismatch (RGB vs BGR)
+
 ```
 Training Pipeline:     [B, G, R] channels
 Simple [0,1] Method:   [R, G, B] channels
@@ -78,12 +82,14 @@ Simple [0,1] Method:   [R, G, B] channels
 ```
 
 **Illustrative Example:**
+
 - Authentic sky (blue): BGR = [255, 150, 100]
 - Model trained to recognize this pattern as sky
 - Simple [0,1] submits: RGB = [100, 150, 255] (normalized to [0.39, 0.59, 1.0])
 - **Model interprets this as entirely different feature pattern**
 
 #### Issue 2: Value Distribution Discrepancy (0-255 vs 0-1)
+
 ```
 Training Distribution:     Pixel values: 0-255 (e.g., 150.0)
 Simple [0,1] Distribution: Pixel values: 0-1   (e.g., 0.588)
@@ -92,12 +98,14 @@ Simple [0,1] Distribution: Pixel values: 0-1   (e.g., 0.588)
 ```
 
 **Neural Network Weight Optimization:**
+
 - **Weights optimized for 0-255 value range**
 - Example: Neuron configured to detect facial features in 100-150 range
 - With 0-1 normalization, these values become 0.39-0.59
 - **Neurons fail to activate appropriately**
 
 #### Performance Impact:
+
 ```
 Training Match:  Accuracy: ~90-95% ✅
 Simple [0,1]:    Accuracy: ~50-60% ❌ (approaching random classification)
@@ -108,6 +116,7 @@ Simple [0,1]:    Accuracy: ~50-60% ❌ (approaching random classification)
 ### 3️⃣ EfficientNet ImageNet (INCORRECT - Moderate Performance)
 
 **Implementation:**
+
 ```python
 from tensorflow.keras.applications.efficientnet import preprocess_input
 arr = preprocess_input(img_resized)
@@ -123,6 +132,7 @@ arr = preprocess_input(img_resized)
 3. **Value range completely different** (approximately -2 to +2) ❌
 
 #### Performance Comparison:
+
 ```
 Training Match:      ~90-95% ✅
 EfficientNet Method: ~70-75% ⚠️ (superior to Simple [0,1] but suboptimal)
@@ -135,12 +145,14 @@ EfficientNet Method: ~70-75% ⚠️ (superior to Simple [0,1] but suboptimal)
 ### Identical Input Image, Three Preprocessing Outcomes:
 
 **Original Image (facial region):**
+
 ```
 RGB pixel at (50, 50):
 R: 180, G: 140, B: 120
 ```
 
 **Training Match (CORRECT):**
+
 ```python
 BGR = [120, 140, 180]  # Channel order reversed
 Values: 120.0, 140.0, 180.0
@@ -148,6 +160,7 @@ Model receives: [120.0, 140.0, 180.0]  ✅ Matches training distribution
 ```
 
 **Simple [0,1] (INCORRECT):**
+
 ```python
 RGB = [180, 140, 120]  # Original channel order (WRONG)
 Values: 0.706, 0.549, 0.471  # Normalized (WRONG)
@@ -155,6 +168,7 @@ Model receives: [0.706, 0.549, 0.471]  ❌ Values never encountered during train
 ```
 
 **EfficientNet (INCORRECT):**
+
 ```python
 RGB = [180, 140, 120]  # Incorrect channel order
 After mean subtraction: [0.44, 0.18, 0.13]
@@ -196,6 +210,7 @@ preprocessing pipelines between training and deployment phases."
 Debug mode visualization demonstrates the differences:
 
 ### Training Match:
+
 ```
 - Tensor Shape: (128, 128, 3)
 - Value Range: [0.0000, 255.0000]  ✅
@@ -204,6 +219,7 @@ Debug mode visualization demonstrates the differences:
 ```
 
 ### Simple [0,1]:
+
 ```
 - Tensor Shape: (128, 128, 3)
 - Value Range: [0.0000, 1.0000]  ❌ Different distribution
@@ -217,15 +233,16 @@ Debug mode visualization demonstrates the differences:
 
 ## 📋 Summary
 
-| Method | Format | Range | Training Compatibility | Accuracy |
-|--------|--------|-------|----------------------|----------|
-| **Training Match** | BGR | 0-255 | ✅ YES | ~95% ✅ |
-| **Simple [0,1]** | RGB ❌ | 0-1 ❌ | ❌ NO | ~58% ❌ |
-| **EfficientNet** | RGB ❌ | -2 to +2 ❌ | ❌ NO | ~72% ⚠️ |
+| Method             | Format | Range       | Training Compatibility | Accuracy |
+| ------------------ | ------ | ----------- | ---------------------- | -------- |
+| **Training Match** | BGR    | 0-255       | ✅ YES                 | ~95% ✅  |
+| **Simple [0,1]**   | RGB ❌ | 0-1 ❌      | ❌ NO                  | ~58% ❌  |
+| **EfficientNet**   | RGB ❌ | -2 to +2 ❌ | ❌ NO                  | ~72% ⚠️  |
 
 ### Conclusion:
 
 **Simple [0,1] method exhibits poor performance due to:**
+
 1. ❌ RGB color format (instead of BGR)
 2. ❌ 0-1 normalization (instead of 0-255 range)
 3. ❌ Model never encountered these value distributions during training
@@ -238,13 +255,10 @@ Debug mode visualization demonstrates the differences:
 ## 🚀 Recommendations
 
 For conference demonstrations:
+
 - ✅ **Employ Training Match method** for accurate results
 - ❌ Present alternative methods solely for comparative analysis
 - 📊 Utilize debug mode to visualize preprocessing differences
 - 🎓 Emphasize the critical importance of preprocessing consistency
 
 ---
-
-**Developed by: Emin Cem Koyluoglu**
-**AICS 2025 Conference**
-**33rd Irish Conference on Artificial Intelligence and Cognitive Science**
